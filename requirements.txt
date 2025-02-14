@@ -1,0 +1,7 @@
+beautifulsoup4
+openpyxl
+python-fasthtml
+monsterUI
+transformers[torch]
+datasets
+optimum[exporters]

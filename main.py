@@ -134,7 +134,7 @@ async def get(text: str):
         Card(
             P(Span("Sentiment:", cls='pr-4'), to_repr(response['label'], 'label'), Br(),
               Span("Probability:", cls='pr-4'), to_repr(response['score'], 'score'), id="result"),
-            cls='mb-15 mt-5'
+            cls=('mb-15 mt-5', CardT.hover)
         )
     )
 
