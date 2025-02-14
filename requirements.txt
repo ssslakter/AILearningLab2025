@@ -1,7 +1,10 @@
 beautifulsoup4
+matplotlib
+scikit-learn
 openpyxl
 python-fasthtml
-monsterUI
+MonsterUI
+torcheval
 transformers[torch]
 datasets
 optimum[exporters]
