@@ -3,6 +3,7 @@ matplotlib
 scikit-learn
 openpyxl
 python-fasthtml
+fh-matplotlib
 MonsterUI
 torcheval
 transformers[torch]
