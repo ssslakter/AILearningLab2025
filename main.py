@@ -5,6 +5,7 @@ import httpx
 from pathlib import Path
 import pandas as pd
 import preprocess
+from fh_plotly import plotly_headers
 
 upload_dir = Path("filez")
 upload_dir.mkdir(exist_ok=True)
@@ -12,7 +13,20 @@ uploaded_data = {}
 api_url = "http://127.0.0.1:5002/api"
 
 
-app, rt = fast_app(hdrs=Theme.blue.headers())
+app, rt = fast_app(hdrs=[*Theme.blue.headers(), plotly_headers])
+
+
+def Benchmark():
+    return Div(
+        Button("Run Benchmark", cls=ButtonT.primary, hx_post="/benchmark", hx_target="#benchmark"),
+        Div(id="benchmark")
+    )
+
+@rt('/benchmark')
+async def post():
+    async with httpx.AsyncClient() as client:
+        res = await client.post(api_url + "/benchmark", params={'filename': uploaded_data['filename']})
+    return res.text
 
 
 @rt('/')
@@ -21,6 +35,7 @@ def index():
                   ThemePicker(color=False, radii=False, shadows=False, font=False, mode=True, cls='p-4'),
                   ClassifyForm(),
                   H3("Upload excel table"),
+                  Benchmark(),
                   Article(
                       Form(
                           UploadZone(DivCentered(Span("Upload Zone"), UkIcon("upload")), accept=".xlsx", name="file"),
@@ -42,6 +57,9 @@ async def upload(file: UploadFile):
 
     # Load the Excel file into a DataFrame
     df = pd.read_excel(file_path)
+    df = preprocess.preprocess_data(df)
+    df.to_excel(file_path, index=False)
+    uploaded_data['filename'] = file.filename
     uploaded_data['dataframe'] = df
 
     return await render_table(df, 0)

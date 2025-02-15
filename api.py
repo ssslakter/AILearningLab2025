@@ -1,4 +1,7 @@
 from fasthtml.common import *
+import pandas as pd
+from pathlib import Path
+from benchmark import *
 from optimum.pipelines import pipeline
 
 classifier = pipeline(task="text-classification", accelerator="ort",
@@ -14,6 +17,16 @@ def get(text: str):
     res = classifier(text)
     print(res)
     return res[0]
+
+
+@rt('/api/benchmark')
+def post(filename: str): 
+    df = pd.read_excel(Path('filez')/filename)
+    texts = df['Text'].to_list()
+    lengths, times = benchmark(classifier, texts)
+    print(lengths)
+    print(times)
+    return to_mpl(lengths, times)
 
 
 @rt('/api/classify/many')
