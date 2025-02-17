@@ -1,15 +1,16 @@
+from tqdm.auto import tqdm
 import time
 import pandas as pd
 import numpy as np
 from collections import defaultdict
-import plotly.express as px
-from fh_plotly import plotly2fasthtml
+# import plotly.express as px
+# from fh_plotly import plotly2fasthtml
 from fh_matplotlib import matplotlib2fasthtml
 
 
 def benchmark(pipe, texts):
     times, lengths = [], []
-    for el in texts:
+    for el in tqdm(texts):
         start = time.time()
         pipe(el)
         lengths.append(len(pipe.tokenizer.tokenize(el)))
@@ -50,26 +51,26 @@ def to_mpl(lengths, times):
     plt.grid(True)
 
 
-def to_plotly(lengths, times):
-    unique_lengths, average_times = group_for_plot(lengths, times)
+# def to_plotly(lengths, times):
+#     unique_lengths, average_times = group_for_plot(lengths, times)
 
-    # Create DataFrame for individual runs
-    df_runs = pd.DataFrame({'Sequence Length': lengths, 'Run Time (s)': times})
+#     # Create DataFrame for individual runs
+#     df_runs = pd.DataFrame({'Sequence Length': lengths, 'Run Time (s)': times})
 
-    # Create DataFrame for average times
-    df_avg = pd.DataFrame({'Sequence Length': unique_lengths, 'Average Time (s)': average_times})
+#     # Create DataFrame for average times
+#     df_avg = pd.DataFrame({'Sequence Length': unique_lengths, 'Average Time (s)': average_times})
 
-    # Create scatter plot for individual runs and line plot for average times
-    fig = px.scatter(df_runs, x='Sequence Length', y='Run Time (s)', 
-                    color_discrete_sequence=['blue'], opacity=0.7, 
-                    labels={'Run Time (s)': 'Run Time (s)', 'Sequence Length': 'Sequence Length'},
-                    title='Run Time vs Sequence Length')
+#     # Create scatter plot for individual runs and line plot for average times
+#     fig = px.scatter(df_runs, x='Sequence Length', y='Run Time (s)', 
+#                     color_discrete_sequence=['blue'], opacity=0.7, 
+#                     labels={'Run Time (s)': 'Run Time (s)', 'Sequence Length': 'Sequence Length'},
+#                     title='Run Time vs Sequence Length')
 
-    # Add average time line
-    fig.add_scatter(x=df_avg['Sequence Length'], y=df_avg['Average Time (s)'], mode='lines', 
-                    line=dict(color='red', width=2), name='Average Time')
+#     # Add average time line
+#     fig.add_scatter(x=df_avg['Sequence Length'], y=df_avg['Average Time (s)'], mode='lines', 
+#                     line=dict(color='red', width=2), name='Average Time')
 
-    # Show grid
-    fig.update_layout(showlegend=True, xaxis=dict(showgrid=True), yaxis=dict(showgrid=True))
+#     # Show grid
+#     fig.update_layout(showlegend=True, xaxis=dict(showgrid=True), yaxis=dict(showgrid=True))
 
-    return fig
+#     return fig

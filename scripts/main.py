@@ -1,11 +1,13 @@
+import sys
+sys.path.append(".")
 from bs4 import BeautifulSoup
 from fasthtml.common import *
 from monsterui.all import *
 import httpx
 from pathlib import Path
 import pandas as pd
-import preprocess
-from fh_plotly import plotly_headers
+import src.preprocess as preprocess
+# from fh_plotly import plotly_headers
 
 upload_dir = Path("filez")
 upload_dir.mkdir(exist_ok=True)
@@ -13,7 +15,7 @@ uploaded_data = {}
 api_url = "http://127.0.0.1:5002/api"
 
 
-app, rt = fast_app(hdrs=[*Theme.blue.headers(), plotly_headers])
+app, rt = fast_app(hdrs=[*Theme.blue.headers()])
 
 
 def Benchmark():
@@ -41,11 +43,18 @@ def index():
                           UploadZone(DivCentered(Span("Upload Zone"), UkIcon("upload")), accept=".xlsx", name="file"),
                           Button("Submit", cls=ButtonT.primary),
                           hx_post=upload, hx_target="#table-container", enctype="multipart/form-data",
-                          cls=PaddingT.md,
+                          cls='p-4',
                       ),
                       Div(id="table-container")
                   )
                   )
+    
+@rt
+def stats():
+    df = uploaded_data['dataframe']
+    label_map = {'positive': 0, 'neutral': 1, 'negative': 2}
+    data = [{"value": label_map[x]} for x in df['label']]
+    
 
 
 @rt
@@ -134,7 +143,7 @@ def ClassifyForm():
                       hx_target="#target", hx_swap="innerHTML",
                       style='border-radius: 10px;'),
         Div(id='target'),
-        cls=PaddingT.lg
+        cls='p-4'
     )
 
 
@@ -144,7 +153,7 @@ async def get(text: str):
     text = preprocess.clean_html(text)
     print(text)
     async with httpx.AsyncClient() as client:
-        response = await client.get(api_url + "/classify", params={"text": text})
+        response = await client.post(api_url + "/classify", json={"text": text})
         response = response.json()
     print(response)
     return Div(

@@ -1,7 +1,10 @@
+import sys
+sys.path.append(".")
 from fasthtml.common import *
+from src.preprocess import clean_html
 import pandas as pd
 from pathlib import Path
-from benchmark import *
+from src.benchmark import *
 from optimum.pipelines import pipeline
 
 classifier = pipeline(task="text-classification", accelerator="ort",
@@ -12,7 +15,8 @@ classifier = pipeline(task="text-classification", accelerator="ort",
 app, rt = fast_app()
 
 @rt('/api/classify')
-def get(text: str):
+def post(text: str):
+    text = clean_html(text)
     print(text)
     res = classifier(text)
     print(res)
