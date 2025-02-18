@@ -1,4 +1,6 @@
 beautifulsoup4
+cosette
+toolslm
 matplotlib
 scikit-learn
 openpyxl
