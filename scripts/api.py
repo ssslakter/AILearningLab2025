@@ -8,7 +8,7 @@ from src.benchmark import *
 from optimum.pipelines import pipeline
 
 classifier = pipeline(task="text-classification", accelerator="ort",
-                      model = "cointegrated/rubert-tiny-sentiment-balanced",
+                      model = 'clapAI/modernBERT-base-multilingual-sentiment',
                       truncation=True,
                       device='cpu')
 

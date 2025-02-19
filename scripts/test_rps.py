@@ -9,7 +9,7 @@ import argparse
 # Server configuration
 SERVER_URL = "http://localhost:5002/api"  # Replace with your server's URL
 ENDPOINT = "/classify"  # Replace with the endpoint you want to test
-CONCURRENT_REQUESTS = [10, 50, 100, 200, 500, 750, 1000, 1250]  # Varying concurrency levels
+CONCURRENT_REQUESTS = [10, 20, 30, 50, 75, 100, 150, 200, 250]  # Varying concurrency levels
 
 request_text = {
     'short': ['Буду участвовать как игрок',
