@@ -1,3 +1,4 @@
+results/
 *.xlsx
 onnx/
 .sesskey
